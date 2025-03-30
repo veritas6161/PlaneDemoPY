@@ -1,4 +1,4 @@
-# 3D Plane Game
+# PlaneDemoPY
 
 A browser-based 3D game where players control a plane to shoot down UFOs hovering over a city.
 
@@ -50,4 +50,4 @@ A browser-based 3D game where players control a plane to shoot down UFOs hoverin
 - Add sound effects for shooting, explosions, and flight
 - Create start screen with instructions
 - Design victory and defeat screens
-- Implement game state management 
+- Implement game state management
