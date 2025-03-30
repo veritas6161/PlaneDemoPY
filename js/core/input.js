@@ -6,6 +6,12 @@ export class InputController {
         this.roll = 0;     // Left/Right: -1 to 1
         this.throttle = 0.6; // PageUp/PageDown: 0 to 1 (starts at 60%)
         
+        // Keep track of keys that should only trigger once per press
+        this.toggleKeys = {
+            c: false,  // Camera toggle
+            m: false   // Mute toggle
+        };
+        
         // Sensitivity parameters
         this.pitchSensitivity = 0.8;
         this.rollSensitivity = 2.0;
@@ -28,6 +34,11 @@ export class InputController {
     // Handle key up events
     handleKeyUp(event) {
         this.keys[event.key.toLowerCase()] = false;
+        
+        // Reset toggle states when key is released
+        if (event.key.toLowerCase() in this.toggleKeys) {
+            this.toggleKeys[event.key.toLowerCase()] = false;
+        }
     }
     
     // Update input values based on key states
@@ -66,6 +77,15 @@ export class InputController {
         } else if (this.keys['pagedown']) {
             this.throttle = Math.max(this.throttle - this.throttleSensitivity * deltaTime, 0.2);
         }
+        
+        // Handle toggle keys
+        if (this.keys['c'] && !this.toggleKeys['c']) {
+            this.toggleKeys['c'] = true;  // Mark as toggled until key is released
+        }
+        
+        if (this.keys['m'] && !this.toggleKeys['m']) {
+            this.toggleKeys['m'] = true;  // Mark as toggled until key is released
+        }
     }
     
     // Get normalized input values
@@ -74,7 +94,8 @@ export class InputController {
             pitch: this.pitch,
             roll: this.roll,
             throttle: this.throttle,
-            cameraToggle: this.keys['c'] === true
+            cameraToggle: this.keys['c'] === true,
+            muteToggle: this.keys['m'] === true && this.toggleKeys['m'] === true
         };
     }
 } 

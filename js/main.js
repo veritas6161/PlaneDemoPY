@@ -5,9 +5,18 @@ import { InputController } from './core/input.js';
 import { CameraController } from './core/camera.js';
 import { GameUI } from './core/ui.js';
 import { UFOManager } from './models/ufoManager.js';
+import { AudioManager } from './core/audio.js';
 import * as THREE from 'three';
 
 console.log('Main script loaded');
+
+// Game states
+const GAME_STATE = {
+    START: 'start',
+    PLAYING: 'playing',
+    VICTORY: 'victory',
+    LOSE: 'lose'
+};
 
 // Game class
 class Game {
@@ -51,8 +60,16 @@ class Game {
             this.ui = new GameUI();
             console.log('UI created');
             
+            // Create audio manager
+            this.audioManager = new AudioManager();
+            console.log('Audio manager created');
+            
             // Initialize last input state for camera toggle detection
             this.lastCameraToggleState = false;
+            this.lastMuteToggleState = false;
+            
+            // Set initial game state
+            this.gameState = GAME_STATE.START;
             
             // Update UI with initial camera mode
             this.ui.updateCameraMode(this.cameraController.currentMode);
@@ -60,11 +77,72 @@ class Game {
             // Store last timestamp for delta time calculation
             this.lastTimestamp = performance.now();
             
+            // Add event listeners for game start/restart
+            document.addEventListener('gameStart', this.startGame.bind(this));
+            document.addEventListener('gameRestart', this.restartGame.bind(this));
+            
             // Start animation loop
             this.animate(this.lastTimestamp);
             console.log('Animation started');
         } catch (error) {
             console.error('Error initializing game:', error);
+        }
+    }
+    
+    // Start the game
+    startGame() {
+        console.log('Game started');
+        this.gameState = GAME_STATE.PLAYING;
+        this.ui.showScreen(GAME_STATE.PLAYING);
+        
+        // Start background music
+        this.audioManager.playBackgroundMusic();
+    }
+    
+    // Restart the game
+    restartGame() {
+        console.log('Game restarted');
+        
+        // Reset the plane position and rotation
+        this.plane.reset();
+        
+        // Reset UFOs
+        this.ufoManager.reset();
+        
+        // Start the game
+        this.startGame();
+    }
+    
+    // Set game to victory state
+    setVictory() {
+        if (this.gameState === GAME_STATE.PLAYING) {
+            console.log('Victory!');
+            this.gameState = GAME_STATE.VICTORY;
+            this.ui.showScreen(GAME_STATE.VICTORY);
+            this.audioManager.playVictoryMusic();
+        }
+    }
+    
+    // Set game to lose state
+    setLose() {
+        if (this.gameState === GAME_STATE.PLAYING) {
+            console.log('Game over!');
+            this.gameState = GAME_STATE.LOSE;
+            this.ui.showScreen(GAME_STATE.LOSE);
+            this.audioManager.playLoseMusic();
+        }
+    }
+    
+    // Check for collisions
+    checkCollisions() {
+        // Check for UFO collisions
+        if (this.ufoManager.checkCollision(this.plane.object)) {
+            this.setLose();
+        }
+        
+        // Check for ground collision
+        if (this.plane.object.position.y < 0) {
+            this.setLose();
         }
     }
     
@@ -89,18 +167,31 @@ class Game {
         }
         this.lastCameraToggleState = input.cameraToggle;
         
-        // Update plane physics
-        this.plane.update(input, deltaTime);
+        // Check for mute toggle
+        if (input.muteToggle && !this.lastMuteToggleState) {
+            const isMuted = this.audioManager.toggleMute();
+            this.ui.updateMuteStatus(isMuted);
+        }
+        this.lastMuteToggleState = input.muteToggle;
         
-        // Update UFOs
-        this.ufoManager.update(deltaTime);
+        // Only update game logic if in PLAYING state
+        if (this.gameState === GAME_STATE.PLAYING) {
+            // Update plane physics
+            this.plane.update(input, deltaTime);
+            
+            // Update UFOs
+            this.ufoManager.update(deltaTime);
+            
+            // Check for collisions
+            this.checkCollisions();
+            
+            // Update UI with current speed
+            const speed = this.plane.getSpeed();
+            this.ui.updateSpeed(speed.current, speed.min, speed.max);
+        }
         
-        // Update camera
+        // Always update camera
         this.cameraController.update(deltaTime);
-        
-        // Update UI with current speed
-        const speed = this.plane.getSpeed();
-        this.ui.updateSpeed(speed.current, speed.min, speed.max);
         
         // Render scene
         this.gameScene.render();

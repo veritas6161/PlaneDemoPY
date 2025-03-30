@@ -217,10 +217,29 @@ export class Plane {
     
     // Get current speed for UI
     getSpeed() {
-        return {
-            current: this.speed.current,
-            min: this.speed.min,
-            max: this.speed.max
+        return { ...this.speed };
+    }
+    
+    // Reset the plane to initial position and rotation
+    reset() {
+        // Reset position
+        this.object.position.set(0, 100, -200);
+        
+        // Reset rotation
+        this.rotation = {
+            pitch: 0,
+            yaw: 0,
+            roll: 0
         };
+        
+        // Apply initial nose-down attitude
+        this.object.rotation.x = -0.1;
+        
+        // Reset quaternion
+        this.quaternion.identity();
+        this.object.quaternion.copy(this.quaternion);
+        
+        // Reset speed
+        this.speed.current = 30;
     }
 } 

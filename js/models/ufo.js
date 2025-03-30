@@ -15,6 +15,11 @@ export class UFO {
         this.hoverFrequency = 0.5;
         this.rotationSpeed = 0.3;
         
+        // Horizontal movement parameters
+        this.horizontalSpeed = 10 + Math.random() * 5; // Speed varies between UFOs
+        this.movingRight = true; // Direction flag
+        this.boundsX = 120; // Maximum X coordinate before turning/wrapping
+        
         // Each UFO has a unique movement pattern
         this.uniqueFrequency = 0.2 + Math.random() * 0.4; // 0.2 to 0.6
         
@@ -140,11 +145,23 @@ export class UFO {
         const hoverOffset = Math.sin(this.time * this.hoverFrequency) * this.hoverAmplitude;
         this.object.position.y += hoverOffset * deltaTime;
         
-        // Small circular movement - different for each UFO
-        const circleX = Math.cos(this.time * this.uniqueFrequency) * 2;
-        const circleZ = Math.sin(this.time * this.uniqueFrequency) * 2;
-        this.object.position.x += (circleX - this.object.position.x) * 0.01;
-        this.object.position.z += (circleZ - this.object.position.z) * 0.01;
+        // Horizontal movement (left to right)
+        if (this.movingRight) {
+            this.object.position.x += this.horizontalSpeed * deltaTime;
+            if (this.object.position.x > this.boundsX) {
+                // Wrap around to the left side when reaching the right boundary
+                this.object.position.x = -this.boundsX;
+            }
+        } else {
+            // Optional: Uncomment this block if you want UFOs to move in both directions
+            /*
+            this.object.position.x -= this.horizontalSpeed * deltaTime;
+            if (this.object.position.x < -this.boundsX) {
+                // Wrap around to the right side when reaching the left boundary
+                this.object.position.x = this.boundsX;
+            }
+            */
+        }
         
         // Rotation - constant spin around Y axis
         this.object.rotation.y += this.rotationSpeed * deltaTime;

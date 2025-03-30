@@ -51,3 +51,35 @@ A browser-based 3D game where players control a plane to shoot down UFOs hoverin
 - Create start screen with instructions
 - Design victory and defeat screens
 - Implement game state management
+
+## Audio Integration
+
+The game uses custom music generated with [Suno.ai](https://suno.com/). To use custom music:
+
+1. Generate the following music tracks using Suno.ai:
+   - Background music: An upbeat, adventure-themed track for gameplay
+   - Victory music: A triumphant, celebratory track
+   - Lose music: A somber, dramatic track
+
+2. Download the generated MP3 files and replace the placeholder files in the `/audio` directory:
+   - `background_music.mp3`
+   - `victory_music.mp3`
+   - `lose_music.mp3`
+
+## Controls
+
+- **Arrow Up/Down**: Pitch up/down
+- **Arrow Left/Right**: Roll left/right
+- **Page Up/Page Down**: Increase/decrease speed
+- **C**: Toggle camera mode
+- **M**: Toggle music/sound
+
+## Running the Game
+
+Start a local web server in the project directory:
+
+```
+npm start
+```
+
+Then access the game at [http://localhost:8080](http://localhost:8080)
