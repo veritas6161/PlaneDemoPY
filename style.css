@@ -1,0 +1,102 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #000;
+    font-family: Arial, sans-serif;
+}
+
+#game-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+/* Game UI styles */
+.game-ui {
+    position: absolute;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
+
+/* Control reference */
+.control-reference {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    max-width: 200px;
+}
+
+.control-reference h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #4CAF50;
+}
+
+.control-reference ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.control-reference li {
+    margin-bottom: 5px;
+}
+
+.control-reference strong {
+    color: #FFC107;
+    margin-right: 5px;
+}
+
+/* Speed indicator */
+.speed-indicator {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    width: 180px;
+}
+
+.speed-display {
+    font-size: 18px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.speed-gauge {
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.speed-bar {
+    height: 100%;
+    width: 60%; /* Initial value */
+    background-color: #FFC107;
+    transition: width 0.3s, background-color 0.3s;
+}
+
+/* Camera mode indicator */
+.camera-mode {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+} 

@@ -1,0 +1,16 @@
+{
+  "name": "plane-game",
+  "version": "1.0.0",
+  "description": "3D plane game where you control a plane and shoot down UFOs",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 8080"
+  },
+  "keywords": [
+    "game",
+    "threejs",
+    "3d"
+  ],
+  "author": "",
+  "license": "MIT"
+} 
